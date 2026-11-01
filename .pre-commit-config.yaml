@@ -1,0 +1,19 @@
+repos:
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.4.1 # Replace with the latest version or git tag
+    hooks:
+      - id: flake8
+        # Black defaults to 88 characters; ignore E203 to prevent spacing conflicts
+        args: ["--max-line-length=88", "--extend-ignore=E203"]
+      
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 26.10.1  # Use the latest stable version of Black
+    hooks:
+      - id: black
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v2.4.1  # Replace with the latest version or git tag
+    hooks:
+      - id: mypy
+        # Add third-party type stubs here if your project needs them
+        additional_dependencies: [] 
