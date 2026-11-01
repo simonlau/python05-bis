@@ -1,5 +1,5 @@
 [project]
-name = "python03"
+name = "python05-bis"
 version = "0.1.0"
 requires-python = ">=3.10"
 dependencies = [ ]
@@ -9,7 +9,7 @@ preset = "all"
 
 [tool.black]
 line-length = 88
-target-version = ['py311', 'py312', 'py313']
+target-version = ['py310']
 include = '\.pyi?$'
 extend-exclude = '''
 /(
