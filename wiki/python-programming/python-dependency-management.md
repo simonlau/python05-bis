@@ -1,7 +1,7 @@
 # Python Dependency Management
 
-> Sources: The Codex - Python Module 05 BIS - Course material; 2026-11-02; Real Python (Leodanis Pozo Ramos); 2026-10-26
-> Raw: [The Codex: Packages, Environments and the Alchemist's Toolchain](/Users/simonlau/code/python05-bis/raw/python-programming/2026-11-01-the-codex-python05-bis.md); [Managing Python Projects With uv: An All-in-One Solution](../../raw/python-programming/2026-11-06-realpython-python-uv.md)
+> Sources: The Codex - Python Module 05 BIS - Course material; 2026-11-02; Real Python (Leodanis Pozo Ramos); 2026-10-26; Real Python (Philipp Acsany); 2024-12-22
+> Raw: [The Codex: Packages, Environments and the Alchemist's Toolchain](../../raw/python-programming/2026-11-01-the-codex-python05-bis.md); [Managing Python Projects With uv: An All-in-One Solution](../../raw/python-programming/2026-11-06-realpython-python-uv.md); [Using Python's pip to Manage Your Projects' Dependencies](../../raw/python-programming/2026-11-06-realpython-what-is-pip.md)
 > Updated: 2026-11-06
 
 ## Overview
@@ -387,6 +387,7 @@ poetry run python script.py
 - [Python Package Structure Basics](/wiki/python-programming/python-package-basics)
 - [Python Imports Guide](/wiki/python-programming/python-imports-guide)
 - [Python uv: All-in-One Package and Project Manager](/wiki/python-programming/python-uv.md)
+- [Python pip: Standard Package Manager](/wiki/python-programming/python-pip.md)
 
 ## Status Notes
 

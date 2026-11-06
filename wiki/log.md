@@ -61,3 +61,13 @@
 - Disposition: Update
 - Raw: raw/python-programming/2026-11-06-realpython-python-uv.md
 - Updated: Virtual Environment Management
+
+## [2026-11-06] ingest | Python pip: Standard Package Manager
+- Disposition: New
+- Raw: raw/python-programming/2026-11-06-realpython-what-is-pip.md
+- Updated: Python pip: Standard Package Manager
+
+## [2026-11-06] ingest | Python Dependency Management (pip addition)
+- Disposition: Update
+- Raw: raw/python-programming/2026-11-06-realpython-what-is-pip.md
+- Updated: Python Dependency Management
