@@ -1,8 +1,8 @@
 # Python Imports Guide
 
-> Sources: The Codex - Python Module 05 BIS - Course material; 2026-11-01
-> Raw: [The Codex: Packages, Environments and the Alchemist's Toolchain](/Users/simonlau/code/python05-bis/raw/python-programming/2026-11-01-the-codex-python05-bis.md)
-> Updated: 2026-11-01
+> Sources: The Codex - Python Module 05 BIS - Course material; 2026-11-01; Real Python (Geir Arne Hjelle); 2020-07-08
+> Raw: [The Codex: Packages, Environments and the Alchemist's Toolchain](../../raw/python-programming/2026-11-01-the-codex-python05-bis.md); [Python import: Advanced Techniques and Tips](../../raw/python-programming/2026-11-06-realpython-python-import.md)
+> Updated: 2026-11-06
 
 ## Overview
 
@@ -371,22 +371,275 @@ def test_import_from_subpackage():
     assert lead_to_gold() == "Recipe transmuting Lead to Gold"
 ```
 
+## Namespace Packages
+
+Namespace packages have been available since Python 3.3. They’re less dependent on the underlying file hierarchy and can be split across multiple directories. A namespace package is created automatically if you have a directory containing a `.py` file but no `__init__.py`. See PEP 420.
+
+Unlike regular packages, namespace packages cannot use `__init__.py` files. They are useful when you want to add your own modules to an existing package without modifying the original package.
+
+## Resource Imports
+
+Sometimes code depends on data files or other resources. `importlib.resources` gives access to resources within packages. It became part of the standard library in Python 3.7.
+
+A **resource** is any file located within an importable package. Resource files must be inside a regular package (directory with `__init__.py`). Namespace packages aren’t supported.
+
+```python
+from importlib import resources
+
+# Open text file
+with resources.open_text("books", "alice_in_wonderland.txt") as fid:
+    alice = fid.readlines()
+
+# Open binary file
+with resources.open_binary("books", "alice_in_wonderland.png") as fid:
+    cover = fid.read()
+```
+
+Convenient functions `read_text()` and `read_binary()` are also available.
+
+For older Python versions, install `importlib_resources` backport:
+```bash
+$ python -m pip install importlib_resources
+```
+
+### Example: Use Data Files
+
+```python
+import csv
+from importlib import resources
+
+def read_population_file(year, variant="Medium"):
+    population = {}
+    with resources.open_text(
+        "data", "WPP2019_TotalPopulationBySex.csv"
+    ) as fid:
+        rows = csv.DictReader(fid)
+        for row in rows:
+            if row["Time"] == year and row["Variant"] == variant:
+                pop = round(float(row["PopTotal"]) * 1000)
+                population[row["Location"]] = pop
+    return population
+```
+
+### Example: Add Icons to Tkinter GUIs
+
+Use `resources.path()` to get a path to resource files:
+
+```python
+with resources.path("hello_gui.gui_resources", "logo.png") as path:
+    self._icon = tk.PhotoImage(file=path)
+self.iconphoto(True, self._icon)
+```
+
+## Dynamic Imports
+
+### Using importlib
+
+The `importlib` package provides programmatic access to the import machinery:
+
+```python
+import importlib
+module = importlib.import_module("math")
+print(module.__doc__)
+```
+
+`import_module()` returns a module object that you can bind to any variable.
+
+### Example: Factory Method With Namespace Packages
+
+```python
+import importlib
+
+def get_serializer(format):
+    try:
+        module = importlib.import_module(f"serializers.{format}")
+        serializer = getattr(module, f"{format.title()}Serializer")
+    except (ImportError, AttributeError):
+        raise ValueError(f"Unknown format {format!r}") from None
+    return serializer()
+```
+
+### Example: A Package of Plugins
+
+Use `importlib.import_module()` to dynamically load plugins, and `importlib.resources.contents()` to list all available plugins in a package.
+
+## The Python Import System
+
+### Import Internals
+
+When you import a module, three things happen:
+1. **Searched for** — Python looks in the module cache, then using finders
+2. **Loaded** — Python loads the module using a loader
+3. **Bound to a namespace** — The module is bound to a namespace
+
+`sys.modules` acts as a module cache — it contains references to all modules that have been imported. The first place Python looks for modules is `sys.modules`. If a module is already available, it isn’t loaded again.
+
+`sys.meta_path` controls which finders are called during the import process:
+
+```python
+>>> import sys
+>>> sys.meta_path
+[<class '_frozen_importlib.BuiltinImporter'>,
+ <class '_frozen_importlib.FrozenImporter'>,
+ <class '_frozen_importlib_external.PathFinder'>]
+```
+
+Built-in modules aren’t shadowed by local modules because the built-in finder is called before the import path finder.
+
+### Example: Singletons as Modules
+
+Modules can serve as singletons — instantiate a class when you load the module, and the module cache ensures it’s instantiated only once.
+
+### Reloading Modules
+
+Use `importlib.reload()` to reload a module without restarting the interpreter:
+
+```python
+>>> import importlib
+>>> importlib.reload(number)
+```
+
+`reload()` requires a module object, not a string like `import_module()` does.
+
+### Finders and Loaders
+
+Extend the Python import system by implementing your own finder and loader. `sys.meta_path` controls which finders are called.
+
+Finders implement `.find_spec()` which can:
+1. Return `None` if it doesn’t know how to find the module
+2. Return a module spec specifying how to load the module
+3. Raise `ModuleNotFoundError`
+
+### Example: Automatically Install From PyPI
+
+A finder can attempt to install missing modules using pip:
+
+```python
+class PipFinder:
+    @classmethod
+    def find_spec(cls, name, path, target=None):
+        cmd = f"{sys.executable} -m pip install {name}"
+        subprocess.run(cmd.split(), check=True)
+        return util.find_spec(name)
+```
+
+**Warning:** The import name doesn’t always correspond to the PyPI package name. Use only in controlled environments.
+
+### Example: Import Data Files
+
+Implement custom finders and loaders to import CSV files directly as modules.
+
+## Import Tips and Tricks
+
+### Handle Packages Across Python Versions
+
+```python
+try:
+    from importlib import resources
+except ModuleNotFoundError:
+    import importlib_resources as resources
+```
+
+### Handle Missing Packages: Use an Alternative
+
+```python
+try:
+    from quicktions import Fraction
+except ModuleNotFoundError:
+    from fractions import Fraction
+```
+
+### Handle Missing Packages: Use a Mock Instead
+
+Create mock objects that serve as drop-in replacements for optional packages:
+
+```python
+try:
+    from colorama import init, Back, Cursor, Fore, Style
+except ModuleNotFoundError:
+    from collections import UserString
+
+    class ColoramaMock(UserString):
+        def __call__(self, *args, **kwargs):
+            return self
+        def __getattr__(self, key):
+            return self
+
+    init = ColoramaMock("")
+    Back = Cursor = Fore = Style = ColoramaMock("")
+```
+
+### Import Scripts as Modules
+
+Use `if __name__ == "__main__":` to allow a file to work as both a script and a library:
+
+```python
+def main():
+    ...
+
+if __name__ == "__main__":
+    main()
+```
+
+### Run Python Scripts From ZIP Files
+
+Python can run scripts packaged into ZIP files using `__main__.py`. Use `zipapp` to streamline:
+
+```bash
+$ python -m zipapp population_quiz -m population_quiz:main
+```
+
+### Handle Cyclical Imports
+
+Cyclical imports happen when two or more modules import each other. Python’s module cache partially handles this, but side effects at import time can cause issues. Solutions:
+
+1. **Break the cycles** — restructure your architecture
+2. **Keep modules free of side effects at import time** — define only attributes, functions, classes
+3. **Do imports locally inside functions** — defer the import until after both modules are fully loaded
+
+```python
+# yin.py
+number = 42
+
+def combine():
+    import yang
+    return number + yang.number
+```
+
+### Profile Imports
+
+Python 3.7+ supports `-X importtime` to measure import times:
+
+```bash
+$ python -X importtime -c "import datetime"
+```
+
+This helps identify slow imports and optimize startup time.
+
 ## Summary of Key Concepts
 
 1. **Import Syntax**: Three main types (import, from import, import *)
 2. **Import Paths**: Absolute vs relative imports
-3. **Package Structure**: Role of __init__.py files
-4. **Best Practices**: Import ordering, avoid wildcards
-5. **Error Handling**: Common issues and solutions
+3. **Package Structure**: Role of `__init__.py` files; namespace packages (PEP 420)
+4. **Best Practices**: Import ordering, avoid wildcards, prefer absolute imports
+5. **Error Handling**: ModuleNotFoundError, circular imports
 6. **Testing**: Verify import structures work correctly
+7. **Resource Imports**: `importlib.resources` for package data files
+8. **Dynamic Imports**: `importlib.import_module()` for runtime imports
+9. **Import Internals**: `sys.modules` cache, `sys.meta_path` finders
+10. **Profiling**: `python -X importtime` to measure import times
 
 ## See Also
 
-- [Python Package Structure Basics](/wiki/python-programming/python-package-basics)
-- [Environment Configuration](/wiki/python-programming/python-dotenv-usage)
-- [Dependency Management](/wiki/python-programming/python-dependency-management)
+- [Python Package Structure Basics](/wiki/python-programming/python-package-basics.md)
+- [Python Dotenv Usage](/wiki/python-programming/python-dotenv-usage.md)
+- [Python Dependency Management](/wiki/python-programming/python-dependency-management.md)
+- [Python pip: Standard Package Manager](/wiki/python-programming/python-pip.md)
+- [Python uv: All-in-One Package and Project Manager](/wiki/python-programming/python-uv.md)
+- [Virtual Environment Management](/wiki/python-programming/virtual-environment-management.md)
+- [The Codex: Packages, Environments and the Alchemist's Toolchain](/wiki/python-programming/the-codex-packages-environments-and-alchemy-toolchain.md)
 
 ## Status Notes
 
 > **Status: Draft**
-> This article covers Python import mechanisms as taught in Exercises 2 and 3 of The Codex. Content may be updated based on specific import requirements and exercise implementations.
+> This article covers Python import mechanisms as taught in Exercises 2 and 3 of The Codex, plus advanced topics from Real Python’s “Python import: Advanced Techniques and Tips” tutorial including namespace packages, resource imports, dynamic imports, import system internals, finders and loaders, reloading modules, cyclical imports, and import profiling.

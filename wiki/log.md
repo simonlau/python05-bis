@@ -71,3 +71,8 @@
 - Disposition: Update
 - Raw: raw/python-programming/2026-11-06-realpython-what-is-pip.md
 - Updated: Python Dependency Management
+
+## [2026-11-06] ingest | Python Imports Guide
+- Disposition: Update
+- Raw: raw/python-programming/2026-11-06-realpython-python-import.md
+- Updated: Python Imports Guide
