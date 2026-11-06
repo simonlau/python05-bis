@@ -46,3 +46,18 @@
 - Updated: Virtual Environment Management
 
 ## [2026-11-06] lint | 2 issues found, 0 auto-fixed
+
+## [2026-11-06] ingest | Python uv: All-in-One Package and Project Manager
+- Disposition: New
+- Raw: raw/python-programming/2026-11-06-realpython-python-uv.md
+- Updated: Python uv: All-in-One Package and Project Manager
+
+## [2026-11-06] ingest | Python Dependency Management (uv addition)
+- Disposition: Update
+- Raw: raw/python-programming/2026-11-06-realpython-python-uv.md
+- Updated: Python Dependency Management
+
+## [2026-11-06] ingest | Virtual Environment Management (uv addition)
+- Disposition: Update
+- Raw: raw/python-programming/2026-11-06-realpython-python-uv.md
+- Updated: Virtual Environment Management

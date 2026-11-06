@@ -1,7 +1,7 @@
 # Virtual Environment Management
 
-> Sources: The Codex - Python Module 05 BIS - Course material; 2026-11-01; Real Python (Martin Breuss); 2024-11-30; GeeksforGeeks; 2025-07-23
-> Raw: [The Codex: Packages, Environments and the Alchemist's Toolchain](../../raw/python-programming/2026-11-01-the-codex-python05-bis.md); [Python Virtual Environments: A Primer](../../raw/python-programming/2026-11-06-python-virtual-environments-primer.md); [Determining if Python is Running in a Virtualenv](../../raw/python-programming/2026-11-06-geeksforgeeks-detecting-virtualenv.md)
+> Sources: The Codex - Python Module 05 BIS - Course material; 2026-11-01; Real Python (Martin Breuss); 2024-11-30; GeeksforGeeks; 2025-07-23; Real Python (Leodanis Pozo Ramos); 2026-10-26
+> Raw: [The Codex: Packages, Environments and the Alchemist's Toolchain](../../raw/python-programming/2026-11-01-the-codex-python05-bis.md); [Python Virtual Environments: A Primer](../../raw/python-programming/2026-11-06-python-virtual-environments-primer.md); [Determining if Python is Running in a Virtualenv](../../raw/python-programming/2026-11-06-geeksforgeeks-detecting-virtualenv.md); [Managing Python Projects With uv: An All-in-One Solution](../../raw/python-programming/2026-11-06-realpython-python-uv.md)
 > Updated: 2026-11-06
 
 ## Overview
@@ -313,6 +313,26 @@ $ conda install numpy
 $ conda deactivate
 ```
 
+### uv
+
+uv is a Rust-based package and project manager that automatically creates and manages virtual environments for Python projects. When you run `uv run` or `uv add`, uv creates a dedicated `.venv/` directory in your project and installs dependencies into it. uv also handles Python version management via `uv python install`.
+
+```bash
+# Create a project with automatic virtual environment
+uv init --no-package myproject
+
+# Run a script (creates .venv/ automatically)
+uv run main.py
+
+# Create a standalone virtual environment
+uv venv
+
+# Add a dependency (installs into project venv)
+uv add requests
+```
+
+uv's virtual environment management is automatic — you don't need to manually create or activate environments. The `.venv/` directory is created in your project root and managed entirely by uv.
+
 ### Third-Party Management Tools
 
 | Tool | Description |
@@ -410,9 +430,10 @@ def is_in_virtualenv():
 - [Python Imports Guide](/wiki/python-programming/python-imports-guide.md)
 - [Python Dependency Management](/wiki/python-programming/python-dependency-management.md)
 - [Python Dotenv Usage](/wiki/python-programming/python-dotenv-usage.md)
+- [Python uv: All-in-One Package and Project Manager](/wiki/python-programming/python-uv.md)
 - [The Codex: Packages, Environments and the Alchemist's Toolchain](/wiki/python-programming/the-codex-packages-environments-and-alchemy-toolchain.md)
 
 ## Status Notes
 
 > **Status: Draft**
-> This article consolidates virtual environment concepts from The Codex (Exercise 0) and Real Python's primer. It covers creation, activation, internal mechanics, customization, alternatives, and management best practices.
+> This article consolidates virtual environment concepts from The Codex (Exercise 0), Real Python's primer, GeeksforGeeks detection guide, and Real Python's uv tutorial. It covers creation, activation, internal mechanics, customization, alternatives (including uv), detection methods, and management best practices.

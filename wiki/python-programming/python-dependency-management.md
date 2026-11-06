@@ -1,8 +1,8 @@
 # Python Dependency Management
 
-> Sources: The Codex - Python Module 05 BIS - Course material; 2026-11-02
-> Raw: [The Codex: Packages, Environments and the Alchemist's Toolchain](/Users/simonlau/code/python05-bis/raw/python-programming/2026-11-01-the-codex-python05-bis.md)
-> Updated: 2026-11-02
+> Sources: The Codex - Python Module 05 BIS - Course material; 2026-11-02; Real Python (Leodanis Pozo Ramos); 2026-10-26
+> Raw: [The Codex: Packages, Environments and the Alchemist's Toolchain](/Users/simonlau/code/python05-bis/raw/python-programming/2026-11-01-the-codex-python05-bis.md); [Managing Python Projects With uv: An All-in-One Solution](../../raw/python-programming/2026-11-06-realpython-python-uv.md)
+> Updated: 2026-11-06
 
 ## Overview
 
@@ -34,20 +34,37 @@ Poetry is a modern Python dependency management and packaging tool. It works wit
 - Generates `poetry.lock` file with exact resolved versions
 - Produces identical results on every install
 
+### uv
+
+uv is a high-speed package and project manager for Python written in Rust. It works with `pyproject.toml` files and uses `uv.lock` for deterministic dependency resolution.
+
+**Philosophy:** Fast, all-in-one, deterministic, reproducible
+
+**Key Characteristics:**
+- Standalone binary (no Python required to install)
+- Resolves dependencies before installation
+- Generates `uv.lock` file with exact resolved versions
+- 10–100x faster than pip for dependency installation
+- Automatic virtual environment management
+- Built-in Python version management
+- Built-in package publishing (`uv publish`)
+
 ## Comparison Table
 
-| Aspect | pip (requirements.txt) | Poetry (pyproject.toml + poetry.lock) |
-|--------|------------------------|--------------------------------------|
-| Configuration File | `requirements.txt` | `pyproject.toml` |
-| Lock File | None (optional `pip freeze`) | `poetry.lock` (always created) |
-| Dependency Resolution | At install time | Before install |
-| Version Pinning | Manual | Automatic via lock file |
-| Reproducibility | Not guaranteed | Guaranteed with lock file |
-| Virtual Environments | Manual creation | Automatic management |
-| Included with Python | Yes | No, separate install |
-| Project Declarations | Separate dependencies | Unified `pyproject.toml` |
-| Publishing | Separate tools | Built-in |
-| Resolves Conflicts | At install time | Before installation |
+| Aspect | pip (requirements.txt) | Poetry (pyproject.toml + poetry.lock) | uv (pyproject.toml + uv.lock) |
+|--------|------------------------|--------------------------------------|------------------------------|
+| Configuration File | `requirements.txt` | `pyproject.toml` | `pyproject.toml` |
+| Lock File | None (optional `pip freeze`) | `poetry.lock` (always created) | `uv.lock` (always created) |
+| Dependency Resolution | At install time | Before install | Before install |
+| Version Pinning | Manual | Automatic via lock file | Automatic via lock file |
+| Reproducibility | Not guaranteed | Guaranteed with lock file | Guaranteed with lock file |
+| Virtual Environments | Manual creation | Automatic management | Automatic management |
+| Included with Python | Yes | No, separate install | No, standalone binary |
+| Project Declarations | Separate dependencies | Unified `pyproject.toml` | Unified `pyproject.toml` |
+| Publishing | Separate tools | Built-in | Built-in (`uv publish`) |
+| Resolves Conflicts | At install time | Before installation | Before installation |
+| Speed | Baseline | Moderate | 10–100x faster than pip |
+| Python Version Mgmt | No | No | Yes |
 
 ## How pip Works
 
@@ -136,6 +153,75 @@ Contains exact resolved versions of all dependencies, including transitive depen
 - Built-in project publishing
 - Clear separation of dev dependencies
 
+## How uv Works
+
+**Installation process:**
+```bash
+# Install uv via standalone installer
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Or via pipx
+pipx install uv
+
+# Initialize a new project
+uv init --no-package myproject
+
+# Add dependencies
+uv add requests pytest
+
+# Run commands in virtual environment
+uv run python script.py
+
+# Lock dependencies
+uv lock
+
+# Sync environment from lockfile
+uv sync
+
+# Upgrade a specific dependency
+uv lock --upgrade-package requests
+
+# Remove a dependency
+uv remove requests
+
+# Add development dependencies
+uv add --dev pytest
+```
+
+**pyproject.toml format with uv:**
+```toml
+[project]
+name = "my-project"
+version = "0.1.0"
+description = ""
+requires-python = ">=3.10"
+dependencies = [
+    "pandas>=2.1.0",
+    "numpy>=1.25.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=7.0.0",
+]
+
+[build-system]
+requires = ["setuptools>=78.1.0", "wheel>=0.45.1"]
+build-backend = "setuptools.build_meta"
+```
+
+**uv.lock file:**
+Contains exact resolved versions of all dependencies, including transitive dependencies. Cross-platform lockfile that ensures every installation produces identical results across different operating systems and architectures.
+
+**Advantages:**
+- Deterministic resolution before installation
+- Automatic virtual environment management
+- Lock file guarantees reproducibility across platforms
+- Built-in project publishing (`uv publish`)
+- Clear separation of dev dependencies (`[dependency-groups]`)
+- 10–100x faster dependency installation than pip
+- Built-in Python version management
+
 ## The Codex Exercise 0: Part 2 - Stocking the Reagents
 
 **Objective:** Create a program (`ex0/loading.py`) that:
@@ -202,6 +288,14 @@ $> poetry run python ex0/loading.py
 - You want automatic virtual environment management
 - You need built-in project publishing
 - You want deterministic dependency resolution
+
+### Choose uv when:
+- You want the fastest dependency installation (10–100x faster than pip)
+- You want an all-in-one tool (replaces pip, pip-tools, pipx, poetry, pyenv, twine, virtualenv)
+- You need cross-platform reproducible builds with `uv.lock`
+- You want built-in Python version management
+- You want built-in package publishing without separate tools
+- You want minimal installation overhead (standalone binary)
 
 ## Best Practices
 
@@ -292,6 +386,7 @@ poetry run python script.py
 - [Virtual Environment Management](/wiki/python-programming/virtual-environment-management)
 - [Python Package Structure Basics](/wiki/python-programming/python-package-basics)
 - [Python Imports Guide](/wiki/python-programming/python-imports-guide)
+- [Python uv: All-in-One Package and Project Manager](/wiki/python-programming/python-uv.md)
 
 ## Status Notes
 
