@@ -1,8 +1,8 @@
 # Python Dotenv Usage
 
-> Sources: The Codex - Python Module 05 BIS - Course material; 2026-11-01
-> Raw: [The Codex: Packages, Environments and the Alchemist's Toolchain](/Users/simonlau/code/python05-bis/raw/python-programming/2026-11-01-the-codex-python05-bis.md)
-> Updated: 2026-11-01
+> Sources: The Codex - Python Module 05 BIS - Course material; 2026-11-01; PyPI - python-dotenv 1.2.4; 2026-10-01
+> Raw: [The Codex: Packages, Environments and the Alchemist's Toolchain](../../raw/python-programming/2026-11-01-the-codex-python05-bis.md); [python-dotenv 1.2.4 - PyPI Package Page](../../raw/python-programming/2026-11-06-pypi-python-dotenv.md)
+> Updated: 2026-11-06
 
 ## Overview
 
@@ -368,6 +368,136 @@ config = dotenv_values()
 print(f"Database: {config['DATABASE_URL']}")  # sqlite://///app/data.db
 ```
 
+## Package Metadata
+
+| Attribute | Value |
+|-----------|-------|
+| Package | `python-dotenv` |
+| Latest Version | 1.2.4 (released Oct 1, 2026) |
+| License | BSD-3-Clause |
+| Python Requirement | >=3.10 |
+| Optional Extra | `cli` |
+| Author | Saurabh Kumar |
+| Maintainers | Saurabh Kumar, Bertrand Bonnefoy-Claudet |
+| Repository | https://github.com/theskumar/python-dotenv |
+
+## Command-Line Interface
+
+The `dotenv` CLI helps you manipulate `.env` files without manually opening them:
+
+```bash
+$ pip install "python-dotenv[cli]"
+$ dotenv set USER foo
+$ dotenv set EMAIL foo@example.org
+$ dotenv list
+USER=foo
+EMAIL=foo@example.org
+$ dotenv list --format=json
+{
+  "USER": "foo",
+  "EMAIL": "foo@example.org"
+}
+$ dotenv run -- python foo.py
+```
+
+Run `dotenv --help` for more information about options and subcommands.
+
+## File Format Reference
+
+### General Rules
+
+- Keys can be unquoted or single-quoted
+- Values can be unquoted, single- or double-quoted
+- Spaces before/after keys, equal signs, and values are ignored
+- Values can be followed by a comment
+- Lines can start with the `export` directive (does not affect interpretation)
+
+### Escape Sequences
+
+| Context | Allowed Escapes |
+|---------|-----------------|
+| Single-quoted values | `\\`, `\'` |
+| Double-quoted values | `\\`, `\'`, `\"`, `\a`, `\b`, `\f`, `\n`, `\r`, `\t`, `\v` |
+
+### Multiline Values
+
+Single- or double-quoted values can span multiple lines:
+
+```bash
+FOO="first line
+second line"
+```
+
+Equivalent to:
+
+```bash
+FOO="first line\nsecond line"
+```
+
+### Variable Without a Value
+
+A variable can have no value:
+
+```bash
+FOO
+```
+
+`dotenv_values` associates this with `None` (e.g., `{"FOO": None}`). `load_dotenv` simply ignores such variables.
+
+This differs from `FOO=`, which associates the variable with the empty string.
+
+### Variable Expansion Precedence
+
+python-dotenv interpolates variables using POSIX variable expansion (`${VAR}`).
+
+**With `load_dotenv(override=True)` or `dotenv_values()`:**
+1. Value in the `.env` file
+2. Value in the environment
+3. Default value, if provided
+4. Empty string
+
+**With `load_dotenv(override=False)` (default):**
+1. Value in the environment
+2. Value in the `.env` file
+3. Default value, if provided
+4. Empty string
+
+## Disabling Dotenv
+
+Set `PYTHON_DOTENV_DISABLED=1` to disable `load_dotenv()` from loading `.env` files or streams. Useful when you can't modify third-party package calls or in production.
+
+## IPython Support
+
+You can use dotenv in IPython:
+
+```
+%load_ext dotenv
+%dotenv
+```
+
+You can also specify a path:
+
+```
+%dotenv relative/or/absolute/path/to/.env
+```
+
+Optional flags:
+
+- `-o` to override existing variables
+- `-v` for increased verbosity
+
+## Related Projects
+
+- [environs](https://github.com/sloria/environs)
+- [Honcho](https://github.com/nickstenning/honcho)
+- [dump-env](https://github.com/sobolevn/dump-env)
+- [dynaconf](https://github.com/dynaconf/dynaconf)
+- [parse_it](https://github.com/naorlivne/parse_it)
+- [django-dotenv](https://github.com/jpadilla/django-dotenv)
+- [django-environ](https://github.com/joke2k/django-environ)
+- [python-decouple](https://github.com/HBNetwork/python-decouple)
+- [django-configuration](https://github.com/jezdez/django-configurations)
+
 ## Common Issues and Solutions
 
 ### 1. "Environment variable not found"
@@ -399,8 +529,9 @@ if not database_url:
 - [Environment Configuration](/wiki/python-programming/environment-configuration)
 - [Virtual Environment Management](/wiki/python-programming/virtual-environments)
 - [Dependency Management](/wiki/python-programming/python-dependency-management)
+- [Python pip: Standard Package Manager](/wiki/python-programming/python-pip.md)
 
 ## Status Notes
 
 > **Status: Draft**
-> This article covers dotenv configuration management as taught in Exercise 1 of The Codex. Content may be refined based on specific exercise requirements and implementation details.
+> This article covers dotenv configuration management from Exercise 1 of The Codex and the python-dotenv 1.2.4 PyPI package page. Content includes `load_dotenv()`, `dotenv_values()`, CLI usage, file format, variable expansion precedence, IPython support, and related projects.

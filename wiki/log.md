@@ -76,3 +76,8 @@
 - Disposition: Update
 - Raw: raw/python-programming/2026-11-06-realpython-python-import.md
 - Updated: Python Imports Guide
+
+## [2026-11-06] ingest | Python Dotenv Usage (PyPI 1.2.4)
+- Disposition: Update
+- Raw: raw/python-programming/2026-11-06-pypi-python-dotenv.md
+- Updated: Python Dotenv Usage
