@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
 
-import sys
-import site
 import os.path
+import site
+import sys
 
 
 def main() -> None:
     is_in_venv = sys.prefix != sys.base_prefix
-    if is_in_venv:
-        status = "The laboratory is sealed"
-    else:
-        status = "You are working in the open"
+    status = "The laboratory is sealed" if is_in_venv else "You are working in the open"
     print(f"LABORATORY STATUS {status}:")
 
     print(f"Current Python: {sys.base_prefix}")
@@ -35,7 +32,7 @@ WARNING: You are in the global environment!
 Every reagent you install here leaks into the whole system
 
 To seal the laboratory, run:
-python3 -m venv lab_env
+python3 -m venv lab_env  # or uv venv
 source lab_env/bin/activate # On Unix
 lab_env\\Scripts\\activate # On Windows
 
