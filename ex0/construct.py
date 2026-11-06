@@ -6,9 +6,6 @@ import os.path
 
 
 def main() -> None:
-    print(f"prefix: {sys.prefix}, base: {sys.base_prefix}")
-    print(f"base: {site.USER_BASE}, site: {site.USER_SITE}")
-    print(os.environ.get("VIRTUAL_ENV"))
     is_in_venv = sys.prefix != sys.base_prefix
     if is_in_venv:
         status = "The laboratory is sealed"
