@@ -1,12 +1,12 @@
-# The Codex: Packages, Environments and the Alchemist’s Toolchain
+# The Codex: Packages, Environments and the Alchemist's Toolchain
 
-> Sources: The Codex - Python Module 05 BIS - Course material; 2026-11-01
-> Raw: [The Codex: Packages, Environments and the Alchemist’s Toolchain](/Users/simonlau/code/python05-bis/raw/python-programming/2026-11-01-the-codex-python05-bis.md)
+> Sources: The Codex - Python Module 05 BIS - Course material; 2026-11-02
+> Raw: [The Codex: Packages, Environments and the Alchemist's Toolchain](../../raw/python-programming/2026-11-01-the-codex-python05-bis.md)
 > Updated: 2026-11-01
 
 ## Overview
 
-"The Codex: Packages, Environments and the Alchemist’s Toolchain" is a comprehensive Python 3.10+ course that transforms students from scattered code writers into organized Python package architects through six progressive exercises. The curriculum uses alchemical metaphors to teach essential software engineering concepts, guiding learners through building a complete Python ecosystem from scratch.
+The Codex Packages Environments and the Alchemist's Toolchain is a comprehensive Python 3.10+ course that transforms students from scattered code writers into organized Python package architects through six progressive exercises. The curriculum uses alchemical metaphors to teach essential software engineering concepts, guiding learners through building a complete Python ecosystem from scratch.
 
 The course covers three core domains:
 - **Laboratory Preparation**: Virtual environments and dependency management
