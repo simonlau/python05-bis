@@ -1,7 +1,7 @@
 # Virtual Environment Management
 
-> Sources: The Codex - Python Module 05 BIS - Course material; 2026-11-01; Real Python (Martin Breuss); 2024-11-30
-> Raw: [The Codex: Packages, Environments and the Alchemist's Toolchain](../../raw/python-programming/2026-11-01-the-codex-python05-bis.md); [Python Virtual Environments: A Primer](../../raw/python-programming/2026-11-06-python-virtual-environments-primer.md)
+> Sources: The Codex - Python Module 05 BIS - Course material; 2026-11-01; Real Python (Martin Breuss); 2024-11-30; GeeksforGeeks; 2025-07-23
+> Raw: [The Codex: Packages, Environments and the Alchemist's Toolchain](../../raw/python-programming/2026-11-01-the-codex-python05-bis.md); [Python Virtual Environments: A Primer](../../raw/python-programming/2026-11-06-python-virtual-environments-primer.md); [Determining if Python is Running in a Virtualenv](../../raw/python-programming/2026-11-06-geeksforgeeks-detecting-virtualenv.md)
 > Updated: 2026-11-06
 
 ## Overview
@@ -342,6 +342,42 @@ $ conda deactivate
 - Opening existing project with venv: PyCharm automatically recognizes and activates it
 - Creating new project: PyCharm prompts to create a virtual environment (default name `.venv`)
 - Adding interpreter: File → Settings → Project → Python Interpreter → Add Interpreter → Add Local Interpreter
+
+## Detecting If Python Is Running in a Virtualenv
+
+Programs can detect whether they are executing inside a virtual environment using several methods. This is useful for handling configurations and dependencies differently depending on the runtime environment.
+
+### Method 1: Comparing sys.prefix and sys.base_prefix
+
+The `sys.real_prefix` attribute was used in earlier versions of Python to store the original prefix before activation, indicating a virtual environment. In newer versions of Python, `sys.base_prefix` will differ from `sys.prefix` if Python is running inside a virtual environment:
+
+```python
+import sys
+
+if hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix):
+    print("Inside venv")
+else:
+    print("Not in venv")
+```
+
+### Method 2: Inspecting Environment Variables
+
+When a virtual environment is activated, the `VIRTUAL_ENV` environment variable is set. Checking for this environment variable is a common method to detect if Python is running inside a virtual environment:
+
+```python
+import os
+
+if 'VIRTUAL_ENV' in os.environ:
+    print("Inside venv")
+else:
+    print("Not in venv")
+```
+
+### Common Pitfalls
+
+- **Environment Variables:** The `VIRTUAL_ENV` variable may be absent or ignored in custom or more exotic versions of virtual environments.
+- **Multiple Environment Managers:** Additional checking may be required as environment managing tools such as conda adopt different paradigms.
+- **Nested Environments:** Having more than one virtual environment may obstruct detection since a more complex nature will require more complex solutions to be implemented.
 
 ## Exercise 0 Application: The Sealed Laboratory
 

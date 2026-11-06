@@ -40,4 +40,9 @@
 - Raw: raw/python-programming/2026-11-06-python-virtual-environments-primer.md
 - Updated: Virtual Environment Management
 
+## [2026-11-06] ingest | Virtual Environment Management (Detection Methods)
+- Disposition: Update
+- Raw: raw/python-programming/2026-11-06-geeksforgeeks-detecting-virtualenv.md
+- Updated: Virtual Environment Management
+
 ## [2026-11-06] lint | 2 issues found, 0 auto-fixed
