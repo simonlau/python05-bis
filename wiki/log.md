@@ -35,4 +35,9 @@
 - Raw: raw/python-programming/2026-11-01-the-codex-python05-bis.md
 - Updated: Circular Dependency Management
 
-## [2026-11-02] lint | 2 issues found, 0 auto-fixed
+## [2026-11-06] ingest | Virtual Environment Management
+- Disposition: Update
+- Raw: raw/python-programming/2026-11-06-python-virtual-environments-primer.md
+- Updated: Virtual Environment Management
+
+## [2026-11-06] lint | 2 issues found, 0 auto-fixed
