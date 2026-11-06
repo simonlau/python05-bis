@@ -55,6 +55,7 @@ warn_unused_configs = true
 
 [tool.uv.sources]
 ex0 = { path = "ex0" }
+ex1 = { path = "ex1" }
 
 [dependency-groups]
 dev = [
