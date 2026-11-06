@@ -4,4 +4,3 @@ python = "3.10.12"
 
 [settings]
 idiomatic_version_file_enable_tools = ["python"]
-python.uv_venv_auto = "create|source"
