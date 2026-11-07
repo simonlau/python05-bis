@@ -1,3 +1,4 @@
+# ruff: ignore [INP001]
 from alchemy import create_air
 from alchemy.potions import strength_potion
 from elements import create_fire
