@@ -81,3 +81,8 @@
 - Disposition: Update
 - Raw: raw/python-programming/2026-11-06-pypi-python-dotenv.md
 - Updated: Python Dotenv Usage
+
+## [2026-11-07] ingest | Circular Dependency Management
+- Disposition: Update
+- Raw: raw/python-programming/2026-11-07-realpython-python-circular-imports.md
+- Updated: Circular Dependency Management

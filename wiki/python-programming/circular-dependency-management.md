@@ -1,12 +1,12 @@
 # Circular Dependency Management
 
-> Sources: The Codex - Python Module 05 BIS - Course material; 2026-11-02
-> Raw: [The Codex: Packages, Environments and the Alchemist's Toolchain](/Users/simonlau/code/python05-bis/raw/python-programming/2026-11-01-the-codex-python05-bis.md)
-> Updated: 2026-11-02
+> Sources: The Codex - Python Module 05 BIS - Course material; 2026-11-01; Real Python (Srujana Maddula); 2026-10-27
+> Raw: [The Codex: Packages, Environments and the Alchemist's Toolchain](../../raw/python-programming/2026-11-01-the-codex-python05-bis.md); [Python Circular Imports: Why They Happen and How to Fix Them](../../raw/python-programming/2026-11-07-realpython-python-circular-imports.md)
+> Updated: 2026-11-07
 
 ## Overview
 
-Circular dependencies occur when two or more modules depend on each other, directly or indirectly, creating an import cycle that prevents Python from initializing either module properly. The Codex refers to this as "The final mystery, and the one that destroys laboratories."
+Circular dependencies occur when two or more modules depend on each other, directly or indirectly, creating an import cycle that prevents Python from initializing either module properly. The Codex refers to this as "The final mystery, and the one that destroys laboratories." Real Python describes it as when two modules import each other and one of them isn’t finished loading yet — Python reports it as an `ImportError` or an `AttributeError`, usually with a message about a partially initialized module.
 
 A circular dependency happens when:
 - Module A imports Module B at the top level
@@ -36,13 +36,123 @@ The traceback shows:
 
 ### Why Circular Imports Fail
 
-Python imports modules by:
-1. Finding the module file
-2. Executing the module code top-to-bottom
-3. Binding names in the module's namespace
-4. Making the module available to other importers
+Whenever Python imports a module, it follows this sequence:
 
-When Module A imports Module B, Python starts executing Module B. If Module B then imports Module A, Python finds Module A is already being imported (partially initialized) and cannot provide the names Module B needs.
+1. **Creates an entry in `sys.modules`** — Python adds the module to its module cache before executing the file
+2. **Executes the file top-to-bottom** — Python runs all statements in the module
+3. **Binds names** — Functions, classes, and variables are defined in the module's namespace
+
+The key insight: Python adds the module to `sys.modules` **before** it finishes executing the file. This means the module can exist in a **partially initialized state** — some functions, classes, and variables may not exist yet because Python hasn’t reached those lines of code.
+
+If another module tries to import one of those objects before it’s defined, Python raises an `ImportError` or `AttributeError`.
+
+#### ImportError vs AttributeError
+
+The exception type depends on the form of the import statement:
+
+| Import Form | Exception When Name Not Found |
+|-------------|------------------------------|
+| `from module import name` | `ImportError` — Python looks for the name immediately |
+| `from package import module` | `AttributeError` — Python defers lookup; fails only when code accesses `module.name` too early |
+
+Example:
+
+```python
+# shop/order.py
+from shop.product import Product  # Fails with ImportError if Product not yet defined
+
+# vs.
+
+from shop import product  # Defers lookup; AttributeError only when product.Product is accessed
+```
+
+#### Step-by-Step Import Sequence
+
+Consider a shop package where `order.py` imports from `product.py`, and vice versa:
+
+1. `main.py` runs `from shop.product import Product`.
+2. Python creates `shop.product`, adds it to `sys.modules`, and starts executing `product.py`.
+3. `product.py` runs `from shop.order import Order`. Since `order.py` hasn’t been loaded yet, Python switches to loading `order.py`.
+4. Python creates `shop.order`, adds it to `sys.modules`, and starts executing `order.py`.
+5. `order.py` runs `from shop.product import Product`.
+6. Python finds `shop.product` in `sys.modules`, but it’s still being initialized and `Product` isn’t available yet → **ImportError**.
+
+The problem is that `product.py` is waiting for `order.py`, while `order.py` is trying to import `Product` from `product.py` before `product.py` has finished defining it.
+
+### Example: Shop Package Circular Import
+
+Real Python provides an e-commerce shop example that demonstrates circular imports:
+
+```
+shop_project/
+│
+├── shop/
+│   ├── __init__.py
+│   ├── order.py
+│   └── product.py
+│
+└── main.py
+```
+
+**shop/order.py** (imports Product from product.py):
+```python
+from shop.product import Product
+
+SHIPPING_FEE = 4.99
+
+class Order:
+    def __init__(self, product: Product, quantity: int) -> None:
+        self.product = product
+        self.quantity = quantity
+        self.extras: list[Product] = []
+
+    def add_shipping(self) -> None:
+        self.extras.append(Product("Shipping", SHIPPING_FEE))
+
+    def get_total(self) -> float:
+        subtotal = self.product.price * self.quantity
+        return subtotal + sum(extra.price for extra in self.extras)
+```
+
+**shop/product.py** (imports Order from order.py):
+```python
+from shop.order import Order
+
+class Product:
+    def __init__(self, name: str, price: float) -> None:
+        self.name = name
+        self.price = price
+
+    def order(self, quantity: int) -> Order:
+        return Order(self, quantity)
+
+    def is_in_order(self, order: Order) -> bool:
+        return order.product.name == self.name
+```
+
+**main.py:**
+```python
+from shop.product import Product
+
+laptop = Product("Laptop", 1000.0)
+order = laptop.order(1)
+order.add_shipping()
+
+print(order.get_total())
+```
+
+Running `main.py` produces:
+```
+$ python main.py
+Traceback (most recent call last):
+  File "main.py", line 1, in <module>
+    from shop.product import Product
+  File "shop/product.py", line 1, in <module>
+    from shop.order import Order
+  File "shop/order.py", line 1, in <module>
+    from shop.product import Product
+ImportError: cannot import name 'Product' from partially initialized module 'shop.product'
+```
 
 ## The Two Grimoires: Light vs Dark
 
@@ -200,6 +310,8 @@ def function_a():
 
 ### Solution 5: TYPE_CHECKING for Type Hints
 
+Python’s `TYPE_CHECKING` constant lets you import modules for static type checking without performing those imports at runtime. `TYPE_CHECKING` is `False` when Python runs the code, but static type checkers treat it as `True`.
+
 ```python
 from typing import TYPE_CHECKING
 
@@ -210,7 +322,29 @@ def function_a(param: "ClassB"):
     pass  # Actual import deferred
 ```
 
-**When to use:** For type hints in circular dependency scenarios.
+**Key details from Real Python:**
+
+- On Python 3.13 and earlier, annotations are evaluated immediately, so you need quotes around type names (`"ClassB"`) or use `from __future__ import annotations` to defer evaluation.
+- On Python 3.14, annotations are evaluated lazily by default, so quotes are optional.
+- You still need `TYPE_CHECKING` on **every** Python version — even 3.14 — because type checkers need the import to resolve the name statically.
+
+Example with quotes (works on all versions):
+```python
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from shop.order import Order
+
+class Product:
+    def __init__(self, name: str, price: float) -> None:
+        self.name = name
+        self.price = price
+
+    def is_in_order(self, order: "Order") -> bool:
+        return order.product.name == self.name
+```
+
+**When to use:** For type hints in circular dependency scenarios — this removes the runtime import so the cycle no longer breaks your program, while type checkers can still resolve the annotation. It’s a targeted fix rather than a full restructuring.
 
 ## Exercise-Specific Application
 
@@ -295,10 +429,14 @@ def function():
 
 ## See Also
 
-- [Python Package Structure Basics](/wiki/python-programming/python-package-basics)
-- [Python Imports Guide](/wiki/python-programming/python-imports-guide)
+- [Python Package Structure Basics](/wiki/python-programming/python-package-basics.md)
+- [Python Imports Guide](/wiki/python-programming/python-imports-guide.md)
+- [Python pip: Standard Package Manager](/wiki/python-programming/python-pip.md)
+- [The Codex: Packages, Environments and the Alchemist's Toolchain](/wiki/python-programming/the-codex-packages-environments-and-alchemy-toolchain.md)
 
 ## Status Notes
 
 > **Status: Draft**
-> This article covers circular dependency concepts as taught in Exercise 4 of The Codex. Content may be refined based on specific implementation requirements.
+> This article covers circular dependency concepts from The Codex (Exercise 4) and Real Python’s “Python Circular Imports: Why They Happen and How to Fix Them” tutorial. It includes the `sys.modules` cache behavior, `ImportError` vs `AttributeError` distinction, shop package example, `TYPE_CHECKING` guard details, workarounds (defer imports, move to bottom, change import form), and Python 3.15 PEP 810 lazy import note.
+
+**Note:** Python 3.15 adds an explicit `lazy` import form in PEP 810. It changes when an import is resolved, which can help when the circular reference isn’t touched while the module is initializing. It doesn’t change your dependency graph, though, so a true cycle still needs restructuring.
