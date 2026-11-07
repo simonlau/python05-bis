@@ -86,3 +86,8 @@
 - Disposition: Update
 - Raw: raw/python-programming/2026-11-07-realpython-python-circular-imports.md
 - Updated: Circular Dependency Management
+
+## [2026-11-07] ingest | Python Package Structure Basics
+- Disposition: Update
+- Raw: raw/python-programming/2026-11-07-realpython-python-init-py.md
+- Updated: Python Package Structure Basics
