@@ -10,7 +10,7 @@ def main() -> None:
     print("This will raise an exception!")
     print("Testing the hidden create_earth:", end="")
     try:
-        # pyrefly: ignore[missing-attribute]
+        # ty: ignore[missing-attribute]
         print(f"{alchemy.create_earth()}")
     except ImportError as error:
         print(f"{error}")
