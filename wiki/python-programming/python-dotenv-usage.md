@@ -116,15 +116,11 @@ print(f"API Key: {'*' * len(api_key) if api_key else 'Not set'}")
 ```python
 def configure_for_development():
     load_dotenv()  # Loads from .env file
-    
+
     matrix_mode = os.getenv("MATRIX_MODE", "development")
     database_url = os.getenv("DATABASE_URL", "sqlite:///dev.db")
-    
-    return {
-        "debug": True,
-        "database": database_url,
-        "testing": False
-    }
+
+    return {"debug": True, "database": database_url, "testing": False}
 ```
 
 **Production Configuration:**
@@ -132,18 +128,14 @@ def configure_for_development():
 def configure_for_production():
     # Load from system environment or .env
     load_dotenv()  # Can also use different file: load_dotenv('.env.production')
-    
+
     matrix_mode = os.getenv("MATRIX_MODE", "production")
     database_url = os.getenv("DATABASE_URL")  # Required in production
-    
+
     if not database_url:
         raise ValueError("DATABASE_URL is required in production")
-    
-    return {
-        "debug": False,
-        "database": database_url,
-        "testing": False
-    }
+
+    return {"debug": False, "database": database_url, "testing": False}
 ```
 
 ### 2. Default Values and Validation
@@ -154,6 +146,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 # Configuration with defaults and validation
 class Config:
     def __init__(self):
@@ -162,7 +155,7 @@ class Config:
         self.api_key = os.getenv("API_KEY")
         self.log_level = os.getenv("LOG_LEVEL", "INFO")
         self.zion_endpoint = os.getenv("ZION_ENDPOINT")
-        
+
     def validate(self):
         """Validate configuration based on environment"""
         if self.matrix_mode == "production":
@@ -170,8 +163,9 @@ class Config:
                 raise ValueError("DATABASE_URL required in production")
             if not self.api_key:
                 raise ValueError("API_KEY required in production")
-        
+
         return True
+
 
 # Usage
 config = Config()
@@ -290,6 +284,7 @@ import os
 from dotenv import load_dotenv
 from unittest.mock import patch
 
+
 @pytest.fixture
 def test_config():
     """Test configuration fixture"""
@@ -297,12 +292,13 @@ def test_config():
         "MATRIX_MODE": "testing",
         "DATABASE_URL": "sqlite:///:memory:",
         "API_KEY": "test_key",
-        "LOG_LEVEL": "DEBUG"
+        "LOG_LEVEL": "DEBUG",
     }
-    
+
     with patch.dict(os.environ, test_env):
         load_dotenv()
         yield test_env
+
 
 def test_development_config(test_config):
     assert test_config["MATRIX_MODE"] == "testing"
@@ -316,20 +312,25 @@ import pytest
 from unittest.mock import patch, mock_open
 import dotenv
 
+
 def test_oracle_with_mocked_env():
     """Test oracle.py with mocked environment variables"""
-    with patch.dict(os.environ, {
-        "MATRIX_MODE": "development",
-        "DATABASE_URL": "sqlite:///test.db",
-        "API_KEY": "test_key_123"
-    }):
+    with patch.dict(
+        os.environ,
+        {
+            "MATRIX_MODE": "development",
+            "DATABASE_URL": "sqlite:///test.db",
+            "API_KEY": "test_key_123",
+        },
+    ):
         # Reload dotenv to pick up mocked environment
         dotenv.load_dotenv()
-        
+
         # Import and test oracle functionality
         from ex1.oracle import OracleConfig
+
         config = OracleConfig()
-        
+
         assert config.matrix_mode == "development"
         assert "test.db" in config.database_url
 ```

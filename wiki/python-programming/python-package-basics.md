@@ -87,7 +87,7 @@ Use `__init__.py` to expose only intended functionality:
 
 ```python
 # Expose frequently used functions
-__all__ = ['create_fire', 'create_water', 'healing_potion']
+__all__ = ["create_fire", "create_water", "healing_potion"]
 
 # Hide implementation details
 # create_earth = create_earth()  # Not exposed at package level
@@ -131,7 +131,7 @@ MAX_POTION_INGREDIENTS = 3
 import alchemy.elements
 from alchemy import elements
 
-# Subpackage access  
+# Subpackage access
 from alchemy.transmutation import recipes
 import alchemy.transmutation.recipes
 
@@ -199,6 +199,7 @@ You can force re-execution with `importlib.reload()`:
 ```python
 import mediatools  # Executes mediatools/__init__.py once
 import importlib
+
 mediatools = importlib.reload(mediatools)  # Re-executes __init__.py
 ```
 
@@ -259,6 +260,7 @@ Sometimes you want to import modules into `__init__.py` for internal use without
 ```python
 from datetime import date as _date
 from math import gcd as _gcd
+
 
 def fancy_date_calculator() -> str:
     today = _date.today

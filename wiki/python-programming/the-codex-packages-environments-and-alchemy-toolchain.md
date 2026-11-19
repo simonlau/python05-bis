@@ -10,7 +10,7 @@ The Codex Packages Environments and the Alchemist's Toolchain is a comprehensive
 
 The course covers three core domains:
 - **Laboratory Preparation**: Virtual environments and dependency management
-- **Configuration Systems**: Environment variables and .env file usage  
+- **Configuration Systems**: Environment variables and .env file usage
 - **Package Architecture**: Import mechanisms, subpackages, and circular dependency resolution
 
 Each exercise builds incrementally, culminating in a complete package structure with dark magic (circular dependency) demonstrations.
@@ -45,7 +45,7 @@ Each exercise builds incrementally, culminating in a complete package structure 
 The project evolves through five exercises, progressively expanding from isolated components to a complete ecosystem:
 
 **Exercise 0 - The Sealed Laboratory**: Virtual environments and basic dependency management
-**Exercise 1 - The Oracle**: Environment variables and configuration systems  
+**Exercise 1 - The Oracle**: Environment variables and configuration systems
 **Exercise 2 - The Alembic**: Package structure and import gateway mechanisms
 **Exercise 3 - Distillation and Transmutation**: Nested imports and subpackage organization
 **Exercise 4 - Avoid the Explosion**: Circular dependency detection and resolution

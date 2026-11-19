@@ -228,6 +228,7 @@ packages = structure
 ```python
 # setup.py
 import setuptools
+
 setuptools.setup()
 ```
 
@@ -277,9 +278,12 @@ $ python -m pip install importlib_resources
 import csv
 from importlib import resources
 
+
 def read_population_file(year, variant="Medium"):
     population = {}
-    with resources.open_text("data", "WPP2019_TotalPopulationBySex.csv") as fid:
+    with resources.open_text(
+        "data", "WPP2019_TotalPopulationBySex.csv"
+    ) as fid:
         rows = csv.DictReader(fid)
         for row in rows:
             if row["Time"] == year and row["Variant"] == variant:
@@ -306,6 +310,7 @@ The `importlib` package provides programmatic access to the import machinery:
 
 ```python
 import importlib
+
 module = importlib.import_module("math")
 print(module.__doc__)
 ```
@@ -316,6 +321,7 @@ print(module.__doc__)
 
 ```python
 import importlib
+
 
 def get_serializer(format):
     try:
@@ -424,8 +430,8 @@ Create mock objects that serve as drop-in replacements for optional packages.
 Use `if __name__ == "__main__":` to allow a file to work as both a script and a library:
 
 ```python
-def main():
-    ...
+def main(): ...
+
 
 if __name__ == "__main__":
     main()

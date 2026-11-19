@@ -374,7 +374,9 @@ The `sys.real_prefix` attribute was used in earlier versions of Python to store 
 ```python
 import sys
 
-if hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix):
+if hasattr(sys, "real_prefix") or (
+    hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix
+):
     print("Inside venv")
 else:
     print("Not in venv")
@@ -387,7 +389,7 @@ When a virtual environment is activated, the `VIRTUAL_ENV` environment variable 
 ```python
 import os
 
-if 'VIRTUAL_ENV' in os.environ:
+if "VIRTUAL_ENV" in os.environ:
     print("Inside venv")
 else:
     print("Not in venv")
@@ -415,10 +417,13 @@ else:
 import sys
 import os
 
+
 def is_in_virtualenv():
     return (
-        hasattr(sys, 'real_prefix') or  # virtualenv
-        (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)  # venv
+        hasattr(sys, "real_prefix")  # virtualenv
+        or (
+            hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix
+        )  # venv
     )
 ```
 

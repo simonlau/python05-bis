@@ -67,7 +67,9 @@ The function `dotenv_values` works more or less the same way as `load_dotenv`, e
 ```python
 from dotenv import dotenv_values
 
-config = dotenv_values(".env")  # config = {"USER": "foo", "EMAIL": "foo@example.org"}
+config = dotenv_values(
+    ".env"
+)  # config = {"USER": "foo", "EMAIL": "foo@example.org"}
 ```
 
 This notably enables advanced configuration management:

@@ -90,6 +90,7 @@ print(...elements.create_fire())  # Fire element created
 ```python
 # ft_alembic_1.py - go through package interface
 import alchemy
+
 print(alchemy.create_air())  # Air element created
 
 # This fails because create_earth is hidden
@@ -102,6 +103,7 @@ print(alchemy.create_air())  # Air element created
 ```python
 # ft_distillation_0.py - direct access to potions.py
 from ...alchemy import potions
+
 print(potions.healing_potion())
 ```
 
@@ -329,6 +331,7 @@ alchemy/
 ```python
 def some_function():
     import heavy_module  # Import only when function is called
+
     return heavy_module.do_something()
 ```
 
@@ -340,15 +343,18 @@ def some_function():
 import pytest
 import sys
 
+
 def test_alchemy_import():
     import alchemy.elements
     from alchemy.elements import create_fire
-    
+
     assert alchemy.create_fire() == "Fire element created"
     assert create_fire() == "Fire element created"
 
+
 def test_relative_import():
     from alchemy.transmutation import recipes
+
     assert recipes.lead_to_gold() == "Recipe transmuting Lead to Gold"
 ```
 
@@ -358,16 +364,21 @@ def test_relative_import():
 def test_import_from_root():
     """Test importing from root level"""
     import elements
+
     assert elements.create_fire() == "Fire element created"
+
 
 def test_import_from_package():
     """Test importing from package"""
     from alchemy.elements import create_fire
+
     assert create_fire() == "Fire element created"
+
 
 def test_import_from_subpackage():
     """Test importing from subpackage"""
     from alchemy.transmutation.recipes import lead_to_gold
+
     assert lead_to_gold() == "Recipe transmuting Lead to Gold"
 ```
 
@@ -408,6 +419,7 @@ $ python -m pip install importlib_resources
 import csv
 from importlib import resources
 
+
 def read_population_file(year, variant="Medium"):
     population = {}
     with resources.open_text(
@@ -439,6 +451,7 @@ The `importlib` package provides programmatic access to the import machinery:
 
 ```python
 import importlib
+
 module = importlib.import_module("math")
 print(module.__doc__)
 ```
@@ -449,6 +462,7 @@ print(module.__doc__)
 
 ```python
 import importlib
+
 
 def get_serializer(format):
     try:
@@ -562,6 +576,7 @@ except ModuleNotFoundError:
     class ColoramaMock(UserString):
         def __call__(self, *args, **kwargs):
             return self
+
         def __getattr__(self, key):
             return self
 
@@ -574,8 +589,8 @@ except ModuleNotFoundError:
 Use `if __name__ == "__main__":` to allow a file to work as both a script and a library:
 
 ```python
-def main():
-    ...
+def main(): ...
+
 
 if __name__ == "__main__":
     main()
@@ -601,8 +616,10 @@ Cyclical imports happen when two or more modules import each other. Python’s m
 # yin.py
 number = 42
 
+
 def combine():
     import yang
+
     return number + yang.number
 ```
 

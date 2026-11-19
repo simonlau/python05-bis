@@ -190,11 +190,14 @@ media_project/
 ```python
 print(f"Importing {__name__}")
 
+
 def wobbulate():
     print("Wibble wobble")
 
+
 def enhance():
     print("Enhancing audio")
+
 
 _secret_password = "Alakazam!"
 __top_secret_password = "!mazakalA"
@@ -205,11 +208,14 @@ __top_secret_password = "!mazakalA"
 ```python
 print(f"Importing {__name__}")
 
+
 def solarize():
     print("Solarizing")
 
+
 def enhance():
     print("Enhancing graphics")
+
 
 indiana_pi = 3.2
 ```
@@ -397,6 +403,7 @@ Sometimes, you want to import packages into `__init__.py` for its internal use, 
 from datetime import date as _date
 from math import gcd as _gcd
 from some.thirdparty.dateutils import lunar_month as _lunar_month
+
 
 def fancy_date_calculator() -> str:
     today = _date.today

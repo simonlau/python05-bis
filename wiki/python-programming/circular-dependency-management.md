@@ -59,11 +59,15 @@ Example:
 
 ```python
 # shop/order.py
-from shop.product import Product  # Fails with ImportError if Product not yet defined
+from shop.product import (
+    Product,
+)  # Fails with ImportError if Product not yet defined
 
 # vs.
 
-from shop import product  # Defers lookup; AttributeError only when product.Product is accessed
+from shop import (
+    product,
+)  # Defers lookup; AttributeError only when product.Product is accessed
 ```
 
 #### Step-by-Step Import Sequence
@@ -100,6 +104,7 @@ from shop.product import Product
 
 SHIPPING_FEE = 4.99
 
+
 class Order:
     def __init__(self, product: Product, quantity: int) -> None:
         self.product = product
@@ -117,6 +122,7 @@ class Order:
 **shop/product.py** (imports Order from order.py):
 ```python
 from shop.order import Order
+
 
 class Product:
     def __init__(self, name: str, price: float) -> None:
@@ -166,16 +172,23 @@ The light grimoire uses a design decision that avoids circular dependency:
 # alchemy/grimoire/light_spellbook.py
 ALLOWED_INGREDIENTS = ["earth", "air", "fire", "water"]
 
+
 def light_spell_allowed_ingredients():
     return ALLOWED_INGREDIENTS
 
+
 def light_spell_record(spell_name: str, ingredients: str):
     from .light_validator import validate_ingredients  # Local import
+
     return validate_ingredients(ingredients)
+
 
 # alchemy/grimoire/light_validator.py
 def validate_ingredients(ingredients: str):
-    from .light_spellbook import light_spell_allowed_ingredients  # Local import
+    from .light_spellbook import (
+        light_spell_allowed_ingredients,
+    )  # Local import
+
     allowed = light_spell_allowed_ingredients()
     if any(ing in ingredients.lower() for ing in allowed):
         return f"{ingredients} VALID"
@@ -201,14 +214,18 @@ from .dark_validator import validate_ingredients  # Top-level import
 
 DARK_INGREDIENTS = ["bats", "frogs", "arsenic", "eyeball"]
 
+
 def dark_spell_allowed_ingredients():
     return DARK_INGREDIENTS
+
 
 def dark_spell_record(spell_name: str, ingredients: str):
     return validate_ingredients(ingredients)
 
+
 # alchemy/grimoire/dark_validator.py
 from .dark_spellbook import dark_spell_allowed_ingredients  # Top-level import
+
 
 def validate_ingredients(ingredients: str):
     allowed = dark_spell_allowed_ingredients()
@@ -263,6 +280,7 @@ Move imports inside functions so they execute after both modules are initialized
 # Module A
 def function_a():
     from module_b import function_b  # Local import
+
     return function_b()
 ```
 
@@ -303,6 +321,7 @@ Change the dependency direction so one module doesn't need to import the other:
 # Module A
 def function_a():
     import module_b  # Import deferred until function call
+
     return module_b.function_b()
 ```
 
@@ -317,6 +336,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from module_b import ClassB  # Only imported for type checkers
+
 
 def function_a(param: "ClassB"):
     pass  # Actual import deferred
@@ -334,6 +354,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from shop.order import Order
+
 
 class Product:
     def __init__(self, name: str, price: float) -> None:
@@ -424,6 +445,7 @@ class ModuleA:
 ```python
 def function():
     from module_b import function_b  # Deferred until call time
+
     return function_b()
 ```
 

@@ -15,7 +15,9 @@ We can compare sys.prefix and sys.base_prefix. The sys.real_prefix attribute was
 ```python
 import sys
 
-if hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix):
+if hasattr(sys, "real_prefix") or (
+    hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix
+):
     print("Inside venv")
 else:
     print("Not in venv")
@@ -30,7 +32,7 @@ When a virtual environment is activated, the VIRTUAL_ENV environment variable is
 ```python
 import os
 
-if 'VIRTUAL_ENV' in os.environ:
+if "VIRTUAL_ENV" in os.environ:
     print("Inside venv")
 else:
     print("Not in venv")

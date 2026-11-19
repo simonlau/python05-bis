@@ -71,6 +71,7 @@ from shop.product import Product
 
 SHIPPING_FEE = 4.99
 
+
 class Order:
     def __init__(self, product: Product, quantity: int) -> None:
         self.product = product
@@ -88,6 +89,7 @@ class Order:
 **shop/product.py:**
 ```python
 from shop.order import Order
+
 
 class Product:
     def __init__(self, name: str, price: float) -> None:
@@ -183,6 +185,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from shop.order import Order
 
+
 class Product:
     def __init__(self, name: str, price: float) -> None:
         self.name = name
@@ -215,6 +218,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from shop.order import Order
 
+
 class Product:
     def __init__(self, name: str, price: float) -> None:
         self.name = name
@@ -222,6 +226,7 @@ class Product:
 
     def order(self, quantity: int) -> "Order":
         from shop.order import Order
+
         return Order(self, quantity)
 
     def is_in_order(self, order: "Order") -> bool:
@@ -246,6 +251,7 @@ class Product:
     def is_in_order(self, order: "Order") -> bool:
         return order.product.name == self.name
 
+
 from shop.order import Order
 ```
 
@@ -268,6 +274,7 @@ if TYPE_CHECKING:
     from shop.product import Product
 
 SHIPPING_FEE = 4.99
+
 
 class Order:
     def __init__(self, product: "Product", quantity: int) -> None:

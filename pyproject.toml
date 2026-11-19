@@ -2,33 +2,41 @@
 name = "python05-bis"
 version = "0.1.0"
 requires-python = ">=3.10"
-dependencies = [ ]
+dependencies = []
 
-[tool.pyrefly]
-preset = "all"
 [tool.ruff]
-# Target the specific Python version you support
-target-version = "py312"
-line-length = 88
+# Sets the max line length for the formatter and isort
+line-length = 79
 
 [tool.ruff.lint]
 # Enable absolutely everything by default
-select = ["ALL"]
+preview = true
+select = [
+    "correctness",
+    "suspicious",
+    "complexity",
+    "performance",
+    "style",
+    "security",
+    "pedantic",
+    "restriction",
+]
+extend-select = ["ANN", "PYI", "blanket-type-ignore"]
 
 ignore = [
-    "D100",    # Missing docstring in public module
-    "D104",    # Missing docstring in public package
-    "D107",    # Missing docstring in __init__
-    "D203",    # One blank line before class docstring (conflicts with D211)
-    "D213",    # Multi-line docstring summary start (conflicts with D212)
-    "COM812",  # Missing trailing comma (conflicts with ruff formatter)
-    "ISC001",  # Implicit string concatenation (conflicts with ruff formatter)
-    "CPY001",  # Missing copyright
-    "T201",    # using print()
-    "D101",    # missing docstring for public class
-    "D102",    # missing docstring for public method
-    "D103",    # missing docstring for public functions
-    "D105",    # missing docstring for magic method
+    "undocumented-public-module",
+    "undocumented-public-class",
+    "undocumented-public-method",
+    "undocumented-public-function",
+    "undocumented-public-package",
+    "undocumented-magic-method",
+    "undocumented-public-init",
+    "incorrect-blank-line-before-class",
+    "multi-line-summary-second-line",
+    "missing-trailing-comma",
+    "single-line-implicit-string-concatenation",
+    "missing-copyright-notice",
+    "print",
 ]
 
 # Ensure you enforce type checking annotations strictly
@@ -45,23 +53,43 @@ force-wrap-aliases = true
 
 # Require explicit updates when code changes
 [tool.ruff.lint.pydocstyle]
-convention = "google" # or "numpy" / "pep257"
+convention = "pep257" # or "numpy" / "google"'
 
 [tool.mypy]
 python_version = "3.10"
 strict = true
+ignore_missing_imports = true
 warn_return_any = true
 warn_unused_configs = true
+show_error_codes = true
 
-[tool.uv.sources]
-ex0 = { path = "ex0" }
-ex1 = { path = "ex1" }
+[tool.ty.src]
+exclude = [".agents"]
+
+[tool.ty.terminal]
+# Treat all warnings as errors (matches strict CI behavior)
+error-on-warning = true
+
+[tool.ty.analysis]
+strict-equality-semantics = true
+strict-generic-narrowing = true
+
+[tool.ty.rules]
+blanket-ignore-comment = "error"
+dynamic-function-decorator-return = "error"
+missing-type-argument = "error"
+possibly-unresolved-reference = "warn"
+unsound-assignment = "error"
+# unsound-return = "error"
+unsound-yield = "error"
+unsupported-dynamic-base = "warn"
+
+# NOTE: the following rules are known to have a significant number of false positives,
+# which is mostly unavoidable. Enable them at your own risk!
+division-by-zero = "warn"
+possibly-missing-attribute = "warn"
+possibly-missing-import = "warn"
+
 
 [dependency-groups]
-dev = [
-    "allowed>=1.5.5",
-    "mypy>=2.4.1",
-    "pre-commit>=4.6.2",
-    "pyrefly>=0.39.4",
-    "pytype>=2024.10.11",
-]
+dev = ["allowed>=1.5.4", "pytype>=2024.10.11"]
