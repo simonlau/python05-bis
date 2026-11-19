@@ -2,7 +2,7 @@ from typing import Literal, TypeAlias
 
 from alchemy.grimoire.dark_validator import validate_ingredients
 
-Ingredient: TypeAlias = Literal["bats", "frogs", "arsenic", "eye-ball"]  # noqa: UP040
+Ingredient: TypeAlias = Literal["bats", "frogs", "arsenic", "eye-ball"]
 
 
 def dark_spell_allowed_ingredients() -> list[Ingredient]:

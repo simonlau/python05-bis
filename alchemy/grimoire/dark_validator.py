@@ -2,8 +2,8 @@ from typing import Literal, TypeAlias
 
 from alchemy.grimoire.dark_spellbook import dark_spell_allowed_ingredients
 
-Result: TypeAlias = Literal["VALID", "INVALID"]  # noqa: UP040
-ValidateResult: TypeAlias = tuple[Result, str]  # noqa: UP040
+Result: TypeAlias = Literal["VALID", "INVALID"]
+ValidateResult: TypeAlias = tuple[Result, str]
 
 
 def validate_ingredients(ingredients: str) -> ValidateResult:

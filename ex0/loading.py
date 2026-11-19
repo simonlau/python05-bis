@@ -5,32 +5,34 @@ from importlib.metadata import metadata
 
 
 def main() -> None:
-    print("REAGENT STATUS: Loading reagents...")
+    print("\nREAGENT STATUS: Loading reagents...\n")
 
     print("Checking dependencies:")
+    module = "pandas"
     try:
-        _ = importlib.import_module("pandas")
-        name = metadata("pandas")["Name"]
-        version = metadata("pandas")["Version"]
-        summary = metadata("pandas")["Summary"]
+        _ = importlib.import_module(module)
+        name = metadata(module)["Name"]
+        version = metadata(module)["Version"]
+        summary = metadata(module)["Summary"]
         print(f"[OK] {name} ({version}) - {summary} ready")
     except ImportError:
-        print("[KO] pandas not ready")
+        print(f"[KO] {module} not ready")
 
+    module = "numpy"
     try:
-        _ = importlib.import_module("numpy")
-        name = metadata("numpy")["Name"]
-        version = metadata("numpy")["Version"]
-        summary = metadata("numpy")["Summary"]
+        _ = importlib.import_module(module)
+        name = metadata(module)["Name"]
+        version = metadata(module)["Version"]
+        summary = metadata(module)["Summary"]
         print(f"[OK] {name} ({version}) - {summary} ready")
     except ImportError:
-        print("[KO] numpy not ready")
+        print(f"[KO] {module} not ready")
 
     msg = """
 pip vs Poetry:
   requirements.txt declares what to install; pip resolves it as install time.
   pyproject.toml declaries the same constraints, and Poetry pins the resolved
-  versions in poetry.lock so every install is identical
+  versions in poetry.lock so every install is identical.
 """
     print(msg)
 
