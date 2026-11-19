@@ -7,13 +7,18 @@ import sys
 
 def main() -> None:
     is_in_venv = sys.prefix != sys.base_prefix
-    status = "The laboratory is sealed" if is_in_venv else "You are working in the open"
-    print(f"LABORATORY STATUS {status}:")
+    status = (
+        "The laboratory is sealed"
+        if is_in_venv
+        else "You are working in the open"
+    )
+    print(f"LABORATORY STATUS {status}:\n")
 
     print(f"Current Python: {sys.base_prefix}")
     if not is_in_venv:
         print("Virtual Environment: None detected")
     else:
+        # ruff: ignore[os-path-basename]
         venv_dir = os.path.basename(os.path.normpath(sys.prefix))
         print(f"Virtual Environment: {venv_dir}")
         print(f"Environment Path: {sys.prefix}")
@@ -29,14 +34,14 @@ Reagent installation path:
     else:
         msg = """
 WARNING: You are in the global environment!
-Every reagent you install here leaks into the whole system
+Every reagent you install here leaks into the whole system.
 
 To seal the laboratory, run:
 python3 -m venv lab_env  # or uv venv
 source lab_env/bin/activate # On Unix
 lab_env\\Scripts\\activate # On Windows
 
-Then run this program again
+Then run this program again.
         """
     print(msg)
 
