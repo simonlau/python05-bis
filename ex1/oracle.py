@@ -2,7 +2,7 @@
 
 import os
 
-from dotenv import load_dotenv
+from dotenv import load_dotenv  # ty: ignore[import-not-found]
 
 
 def main() -> None:
